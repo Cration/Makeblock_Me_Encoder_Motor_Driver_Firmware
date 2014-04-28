@@ -382,21 +382,11 @@ void i2cCommand(uint8_t *cmd)
 }
 float readFloatFromArray(byte *arr)
 {
-    int i;
-    for(i = 0; i < 4; i++)
-    {
-        u.b[i] = arr[i];
-    }
-    return u.fVal;
+    return *((float *)arr);
 }
 long readLongFromArray(byte *arr)
 {
-    int i;
-    for(i = 0; i < 4; i++)
-    {
-        u.b[i] = arr[i];
-    }
-    return u.lVal;
+    return *((long *)arr);
 }
 float readFloat(int addr)
 {
