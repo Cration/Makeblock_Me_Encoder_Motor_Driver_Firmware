@@ -441,12 +441,13 @@ void loop()
 }
 void runEncoder()
 {
-    _time = micros() - _prevTime;
+    long currentTime = micros();
+    _time = currentTime - _prevTime;
     if(_time < 40000 && _time > 0)
     {
         return;
     }
-    _prevTime = micros();
+    _prevTime = currentTime;
     runEncoder(ENCODER_1);
     runEncoder(ENCODER_2);
 }
@@ -560,12 +561,13 @@ void runMotorWithSpeedAndTime(float speed, long time, int encoder)
     _max_speed[encoder] = 10.0 * _ratio[encoder] * _counters[encoder] / 1000.0;
     _maxPWM[encoder] = 250;
 }
+
 void runEncoder(int encoder)
 {
     _position[encoder] = encoders[encoder].read();
     _speed[encoder] = (_position[encoder] - _prevInput[encoder]) * 1000.0 / _time;
     float currentSpeed = 0;
-    _PID_input[encoder] = _mode[encoder] == FINISH_MODE ? _position[encoder] : _speed[encoder];
+    _PID_input[encoder] = (_mode[encoder] == FINISH_MODE) ? _position[encoder] : _speed[encoder];
 
     if(_running[encoder] == true)
     {
@@ -588,7 +590,7 @@ void runEncoder(int encoder)
             _PWM_output[encoder] = 0;
             runMotorWithAngle(encoder);
         }
-        if(encoder == ENCODER_1 && DEBUG)
+        if((encoder == ENCODER_1) && DEBUG)
         {
             Serial.print(currentSpeed);
             Serial.print(",");
